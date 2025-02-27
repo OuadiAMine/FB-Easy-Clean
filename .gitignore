@@ -1,0 +1,22 @@
+# Node modules (if you use Node for any build tools)
+node_modules/
+
+# Logs and debug files
+logs/
+*.log
+npm-debug.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build output (if applicable)
+dist/
+build/
+
+# Editor folders and files (e.g., VS Code)
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook Easy Clean</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-blue: #1877F2;
+      --accent-red: #FF4B4B;
+      --bg-color: #ffffff;
+      --text-color: #1a1a1a;
+      --card-bg: #f5f6f7;
+      --border-color: #dddfe2;
+      --hover-bg: #e4e6eb;
+      --scrollbar-track: #f0f2f5;
+      --scrollbar-thumb: #c1c1c1;
+    }
+    [data-theme="dark"] {
+      --bg-color: #1a1a1a;
+      --text-color: #e3e3e3;
+      --card-bg: #2d2d2d;
+      --border-color: #3a3a3a;
+      --hover-bg: #373737;
+      --scrollbar-track: #373737;
+      --scrollbar-thumb: #1877F2;
+    }
+    body {
+      width: 320px;
+      min-height: 400px;
+      margin: 0;
+      padding: 15px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+    }
+    .theme-toggle:hover {
+      background-color: var(--hover-bg);
+    }
+    .theme-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+    }
+    .header {
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.4em;
+      color: var(--primary-blue);
+      margin: 10px 0 20px;
+      letter-spacing: -0.5px;
+    }
+    .button-container {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .action-btn {
+      flex: 1;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text-color);
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .action-btn.delete-photos {
+      background: linear-gradient(135deg, #1877F2 0%, #0D5CBE 100%);
+      color: #fff;
+    }
+    .action-btn.delete-posts {
+      background: linear-gradient(135deg, #FF4B4B 0%, #D33636 100%);
+      color: #fff;
+    }
+    .status-section {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .current-task {
+      font-size: 0.9em;
+      color: var(--text-color);
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--text-color);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .log-container {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 15px;
+      height: 180px;
+      overflow-y: auto;
+      margin-top: 15px;
+      border: 1px solid var(--border-color);
+    }
+    .log-entry {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8em;
+      color: var(--text-color);
+      opacity: 0.9;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border-color);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 3px;
+    }
+    /* Add footer styles */
+    .footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.8em;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+    .footer a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer a:hover {
+      opacity: 1;
+    }
+    .footer svg {
+      width: 16px;
+      height: 16px;
+      fill: #6e6e6e;
+      transition: fill 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" aria-label="Toggle theme">
+    <!-- Keep your original sun/moon SVG icons -->
+    <svg id="sunIcon" class="theme-icon" viewBox="0 0 24 24">
+        <defs>
+          <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FFD700; stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FFA500; stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <circle cx="12" cy="12" r="4.5" fill="url(#sunGradient)"/>
+        <g stroke="url(#sunGradient)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M12 3V5M12 19v2M5.5 5.5l1.5 1.5M17 17l1.5 1.5M3 12h2M19 12h2M5.5 18.5l1.5-1.5M17 7l1.5-1.5"/>
+          <path d="M12 8.5l-1.5 1.5M12 15.5l1.5 1.5M15.5 12l1.5-1.5M8.5 12l-1.5-1.5" 
+                stroke-linejoin="round"/>
+        </g>
+      </svg>
+    <svg id="moonIcon" class="theme-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+    </svg>
+  </button>
+
+  <div class="header">
+    <div class="logo">Facebook Easy Clean</div>
+  </div>
+
+  <div class="button-container">
+    <button id="deletePhotos" class="action-btn delete-photos">Delete Photos</button>
+    <button id="deletePosts" class="action-btn delete-posts">Delete Posts</button>
+  </div>
+
+  <div class="status-section">
+    <div class="current-task" id="currentTask">
+      <div class="spinner"></div>
+      <span>Idle</span>
+    </div>
+  </div>
+
+  <div class="log-container" id="logContainer">
+    <!-- Log entries will appear here dynamically -->
+  </div>
+
+  <!-- Insert GitHub credit footer -->
+  <footer class="footer">
+    <a href="https://github.com/OuadiAMine" target="_blank">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 .297a12 12 0 00-3.797 23.402c.6.111.82-.258.82-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.09-.744.083-.729.083-.729 1.205.085 1.84 1.236 1.84 1.236 1.07 1.835 2.807 1.305 3.492.998.107-.775.418-1.305.762-1.605-2.665-.3-5.466-1.334-5.466-5.93 0-1.31.468-2.381 1.235-3.221-.123-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 016 0c2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.12 3.176.77.84 1.232 1.911 1.232 3.221 0 4.61-2.803 5.625-5.475 5.921.43.371.823 1.102.823 2.222v3.293c0 .319.218.694.825.576A12 12 0 0012 .297"></path>
+      </svg>
+      Created by OuadiAMine
+    </a>
+  </footer>
+
+  <script src="popup.js"></script>
+  <script>
+    // Toggle dark/light mode functionality (unchanged)
+    const themeToggle = document.querySelector('.theme-toggle');
+    const body = document.body;
+    const sunIcon = document.getElementById("sunIcon");
+    const moonIcon = document.getElementById("moonIcon");
+
+    let savedTheme = localStorage.getItem('theme');
+    if (!savedTheme) {
+      savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    body.setAttribute('data-theme', savedTheme);
+    updateIcons(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateIcons(newTheme);
+    });
+
+    function updateIcons(theme) {
+      if (theme === 'dark') {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
